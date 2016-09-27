@@ -1,0 +1,236 @@
+% LAST content change on 12.04.2015, 08:30
+% Project proposal template created by Andreas Holzinger 01.10.2012, modified 04.05.2014
+% renamed DiL from iKNOdis (general FWF project proposal template)
+% NOTE: font size 11 pt, one-and-a half spacing - think always on proper readability for the reviewers
+% Maximum word length = 9,000 words, on max. 20 pages (without TOC and without 5 pages of references)
+% TOTAL pages-> 21 pages with TOC + 5 refs = 26 pages
+\documentclass[a4paper,10pt]{article}
+\usepackage[round,authoryear]{natbib}
+
+\usepackage{url}
+\urldef{\mail}\path|a.holzinger@hci-kdd.org|
+\urldef{\hciforall}\path|hci-kdd.org|
+%\usepackage{refcheck}
+\usepackage{a4wide}
+%\usepackage{geometry}
+%\usepackage{amsmath}
+%\usepackage{amsfonts}
+\usepackage{amssymb}
+%\usepackage{amsxtra}
+%\usepackage[table]{xcolor}
+\usepackage{graphicx}
+\usepackage{pdfpages}
+%\usepackage{fancyhdr}
+\usepackage{color,soul}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{comment}
+\usepackage{float}
+
+%% In order to set bibliography item spacing
+\usepackage{setspace}
+
+%\usepackage{showkeys}
+%\usepackage[notref,notcite]{showkeys}
+%\usepackage[colorlinks=true,citecolor=black,urlcolor=black,
+%linkcolor=black,pdfpagemode=UseNone]{hyperref}
+\usepackage{cite}
+\usepackage[
+	colorlinks=true,%
+	citecolor=blue,%
+	urlcolor=blue,%
+	linkcolor=blue,%
+	pdfpagemode=UseNone%
+]{hyperref}
+
+\usepackage{changepage}
+\usepackage{xcolor,colortbl}
+\definecolor{Gray}{gray}{0.85}
+\usepackage{eurosym}
+% set the required 1.5-line spacing
+%\renewcommand{\baselinestretch}{1.5}
+
+\newtheorem{defi}{Definition}
+
+% increase the text size so that the proposal fits on 20 pages
+% \addtolength{\textheight}{2.0cm}
+% \addtolength{\topmargin}{-1.0cm}
+% \setlength{\parindent}{0pt}
+% \frenchspacing
+
+\usepackage[inner=20mm,outer=30mm,top=30mm,bottom=30mm,a4paper]{geometry}
+
+\pagestyle{myheadings}
+
+\let\endtitlepage\relax
+
+%% For TODO notes showing up on page margins.
+%
+\usepackage[pangram]{blindtext}
+\usepackage[colorinlistoftodos,prependcaption,textsize=small]{todonotes}
+\newcommand{\unsure}[2][1=]{\todo[linecolor=green,backgroundcolor=green!40,bordercolor=green]{#2}}
+\newcommand{\change}[2][1=]{\todo[linecolor=red,backgroundcolor=red!50,bordercolor=red]{#2}}
+\newcommand{\info}[2][1=]{\todo[linecolor=orange,backgroundcolor=orange!50,bordercolor=orange]{#2}}
+\newcommand{\thiswillnotshow}[2][1=]{\todo[disable]{#2}}
+%
+\usepackage{enumitem}
+\setlist[itemize]{leftmargin=*}
+
+
+\begin{document}
+
+\begin{center}
+\bfseries\Large
+Google FRA Proposal: \\
+Towards a JavaScript-Empowered\\
+Smart Interactive Computing Architecture (JESICA)
+
+\normalfont\normalsize
+
+\vspace{\baselineskip}
+Skeleton for clickable DOIs
+
+\end{center}
+
+\bibliographystyle{apalike2}
+
+% \setstretch{0.6}
+\vspace{\baselineskip}
+
+\begin{adjustwidth}{0.3cm}{}
+\begin{abstract}
+  As data analysis pipelines become more complex as well as ubiquitous, the need for standardization and community data platforms emerge. At the same time JavaScript has become the most widely used language on the planet, powering any kind of computing device. We therefore propose to develop JESICA, an open access Web-based data platform allowing experts and users alike to visually compose state-of-the-art processing pipelines. Furthermore meta data about each experiment will be stored; this will enable heuristics to drive a recommendation engine which is able to propose optimal processing paths if presented with input data plus problem specification. As the logical centerpiece of JESICA, we will develop a Smart Computational Pipeline (SCP) capable of self-configuration and user interaction, as well as a Webworker-based mechanism for background execution of individual stages. Our goal is to demonstrate the SCP's feasibility within a year using predefined test data sets.
+\end{abstract}
+\end{adjustwidth}
+
+%%=================================================================================
+%%			PROBLEM WITH PIPELINES TODAY
+%%=================================================================================
+
+\begin{enumerate}
+\item \textbf{The problem with today's data analysis pipelines}
+
+In order to realize the vision of a bright future of data accessibility \citep{Halevy2012}, \citep{GuptaEtAl2013ProgressonHalevy}, we need standardized mechanisms to implement data analysis pipelines transforming raw data into structured information. Today, much effort is potentially squandered by implementing complex pipelines within isolated teams in a non-standardized fashion: Proprietary approaches - both in technology as in methodology - hinder the exchange of information within the data community. Let's take a look at some problems in detail:
+
+\begin{itemize}
+ \item Isolation. Disparate approaches to data analysis makes dealing with errors at any stage of the pipeline unnecessarily hard due to a lack of reference values, whereas solving problems and achieving superb results has no beneficial effect on the potential of others.
+
+ \item Proprietary Software. Professionals often develop algorithms in highly proprietary environments. This prevents an influx of solid, community-tested algorithms while restraining proliferation of gained knowledge to those unwilling to pay for a particular software package.
+
+ \item Irreproducibility. Results from experiments conducted in isolation cannot be easily corroborated. This might be advantageous with respect to product development and patent procedures, but is usually detrimental to the efforts of researchers trying to gain acceptance.
+
+ \item Lack of scalability. Highly heterogeneous and customized data processing pipelines may not lend themselves well to parallelization, preventing their use on quickly expanding datasets.
+\end{itemize}
+
+
+%%=================================================================================
+%%				JESICA - an overview
+%%=================================================================================
+
+\item \textbf{JESICA - overview}
+
+The central idea behind our project is to utilize the power of modern JavaScript Engines to perform data processing tasks recently only conducted on servers. Our first experiments in graph extraction from images (the project which spawned the idea of JESICA) showed that even with unoptimized JS code image processing can be done at about the speed of Matlab \citep{GraphExtractPaper}. While technologies like asm.js or WebGL/CL will increase the performance of single computations manyfold, there are presently no JS-based libraries able to configure whole processing pipelines based on a standard format with dependency resolution and the ability to self-configure based on heuristics. JESICA is designed to be an open, web-based platform delivering data analysis algorithms in JS to browsers, providing a Smart Computational Pipeline (SCP) equipped with a problem case analyzer as well as a (Machine Learning) model recommender. An example use case would see a user drop an image folder into their browser and specify a desired outcome (object recognition / classification etc.). JESICA would then recommend an analysis workflow, configure itself accordingly, and upon execution send a package of metadata describing the pipeline including results to a server heuristics database. This in turn would train the recommender, so that new ML models produced by individuals could immediately benefit others using the platform.
+
+
+%%=================================================================================
+%%				JESICA - characteristics
+%%=================================================================================
+
+\item \textbf{JESICA - characteristics}
+\begin{itemize}
+ \item Accessibility. Obviously, delivering JS to browsers is the most convenient form of 'installation'.
+ \item Effortless scalability. As users of our platform will provide their own computing power, the server role initially can be reduced to that of a static document server plus database.
+ \item Meta Machine Learning $\rightarrow$ Heuristics. As researchers start using our platform, their pipeline configurations, input descriptions, task specifiers as well as results will be stored on the server. Provided enough data, meta machine learning could provide heuristics as to what succession of algorithms might be best suited to tackle a specific input / problem combination.
+ \item Pipeline recommender. Based on the previous step, an optimal pipeline configuration could be recommended. The SCP would then self-assemble and be ready to commence the experiment.
+ \item User interaction will be possible via a modern browser UI allowing to assemble a pipeline by dragging visual representations of building blocks (tasks / algorithms) into place. At every step, the SCP must be able to check and assert the feasibility of a user-provided pipeline.
+ \item Goodies. Input and output filters (Latex!), the formation of research groups, social collaboration, bookmarks to fully-configured experiments (reproducibility) etc. would be typical WebApp addons which could turn the basic service into a promising data analysis startup.
+\end{itemize}
+
+
+%%=================================================================================
+%%				BUSINESS CASE
+%%=================================================================================
+
+\item \textbf{The business case for JESICA}
+
+The first and obvious case is a data analysis / machine learning platform for experts who do not wish to spend weeks or even months designing, writing, optimizing, deploying and monitoring proprietary pipelines. While this problem is also tackled by others, JESICA's unique advantages will open up possibilities towards end users as well:
+
+\begin{itemize}
+ \item Because JESICA will be Web/JS based, the barrier of entry to getting involved is simply going online. This will benefit editors of journals upon receiving submissions, journalists writing about new data insights, students desiring to learn from real world examples, and probably many others.
+
+ \item JESICA will be running on practically every computing device in the world. It will not be long before a simple smart phone will reliably classify dermatological images for cancer detection routinely - without the need for transfering sensitive data over the network.
+
+ \item Combining modern speech recognition capabilities with JESICA's self-configuring SCP, users will be able to entrust their devices with personalized analysis tasks far beyond the reach of contemporary search engines. In short: NLP + JESICA = actually ``intelligent'' personal assistant!
+\end{itemize}
+
+
+%%=================================================================================
+%%			OUR WORK PLAN
+%%=================================================================================
+
+\item \textbf{Our work - what the Google grant will finance}
+
+JESICA as a platform will comprise several components, but as its centerpiece the Smart Computational Pipeline (SCP) will form the logical starting point. Our 1-year plan thus encompasses
+\begin{itemize}
+ \item developing a suitable data format for representing the pipeline, including dependencies between tasks (algorithms) on individual stages plus a result format for later server side analysis,
+ \item implementing a DAG dependency resolution algorithm with visual feedback and user interaction through an intuitive UI based on graphical representation of algorithmic building blocks,
+ \item devising a Webworker-based system for executing individual stages of the pipeline in the background without the need for excessive copying of large datastructures,
+ \item and outlining as well as conducting a series of test cases to demonstrate the SCP's feasibility with the use of modern browsers. As use cases we will build on the experiments described in \citep{GraphExtractPaper} as well as text analysis tasks with publicly available datasets.
+\end{itemize}
+
+Challenges to this approach (and any algorithmic platform based on JavaScript) include the lack of a JS Machine Learning community and therefore a lack of available code. As it is unrealistic to try and implement hundreds of interesting algorithms ourselves, we will focus on transfering existing implementations from other languages to JavaScript with as much automation as possible. Our idea so far is compiling C/C++ as well as Python libraries to asm.js using LLVM / Emscripten. Although completion of our set goal does not require the availability of a broad spectrum of algorithms, this transfer tool would represent the next logial step towards introducing JESICA to the community. We will thus tackle it first in case we are able to advance speedier than expected.
+
+
+
+%%=================================================================================
+%%			PRIOR WORK / DIFFERENCES
+%%=================================================================================
+
+\item \textbf{Prior work \& levels of data analysis pipelines }
+
+As existing stacks indicate, there are several possible levels of pipelines which can be sorted by increasing homogeneity amongst their stages as well as decreasing technical demands on their users:
+
+\begin{itemize}
+ \item Level 0: Writing all of the pipeline manually. As every combination of technologies are usable, this approach gives the most flexibility but is hard to maintain and almost impossible to reproduce. Furthermore, as \citep{MLTechnicalDebt} perfectly states: ``Using self-contained solutions often results in a glue code system design pattern, in which a massive amount of supporting code is written to get data into and out of general-purpose packages.''
+
+ \item Level 1: Automated, but self designed and coded. This entails the usage of tools like Unix Make which is language agnostic and therefore supports any number of technologies as long as they are executable from a Shell. Apart from slightly better decoupling, same problems as Level 0.
+
+ \item Level 2: Establishing a common understanding of the components and structure of a pipeline while still using individual technologies. Such a common standard exists in the form of PMML - the Predictive Model Markup Language. PMML defines stages of pipelines as well as their inputs, parameter types and ranges, the output format etc. Thus, developers can use their favorite technologies in the development phase while PMML consuming tools then produce community-standard compliant code (Hadoop, Spark, ..).
+
+ \item Level 3: Language specific libraries exposing an API to conveniently assemble a pipeline. Such libraries have been released by projects like scikit-learn or Apache Spark. While currently becoming popular, APIs still restrict the creation of data applications to experts capable of coding.
+
+ \item Level 4: The use of a custom Domain Specific Language (DSL) would widen the ability to create complex data pipelines to any kind of domain expert. Similar in nature to SQL, it is able to either compile itself into code or an intermediate representation like PMML.
+
+ \item Level 5: A fully integrated data analysis platform that offers intuitive, visual pipeline assembly. Ideally, tools for reporting, reproduction and collaboration would also be included. In addition, the platform could offer experts the means to write stages themselves via an online code editor. JESICA is designed to be such a platform.
+\end{itemize}
+
+
+\item \textbf{Data Policy}
+
+The outcome of this project will be delivered as Open Source Software as well as Scientific / Engineering Publications. We will host our Code in a public github repository at \url{https://github.com/cassinius/smart-computational-pipeline}. Papers will be submitted to journals committed to an open access policy. More information about the JESICA Idea can be found at \url{http://berndmalle.com/jesica}.
+
+
+\item \textbf{Budget}
+%\change{Please insert desired conferences} iUI 2016 is a Google sponsored conference to be held in San Jose
+\begin{table}[H]
+  \begin{adjustwidth}{0.9cm}{}
+    % \renewcommand{\arraystretch}{1.0}% Spread rows out...
+    \begin{tabular}{| p{4cm} | p{5.7cm} | >{\hfill}p{4cm}|}
+    \hline
+    \rowcolor{Gray}
+    \textbf{Matter of expense} & \textbf{Intended use} & \textbf{Expenditure in USD} \\ \hline
+    Bernd MALLE & PhD Salary for one year  & 45,000 \\ \hline
+    Travel costs & conferences (e.g. iUI2016) & 3,000  \\ \hline
+    \textbf{Total expenditures} & & \textbf{48,000} \\ \hline
+    \end{tabular}
+  \end{adjustwidth}
+\end{table}
+
+
+\end{enumerate}
+
+% \listoftodos[Notes]
+{\footnotesize
+\bibliography{JESICA_google_proposal}
+}
+\end{document}
